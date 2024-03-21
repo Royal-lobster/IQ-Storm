@@ -1,5 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { generateInputSchema } from "./schema";
 import {
 	generateIdeaFromTwoIdeasPromptTemplate,
@@ -32,8 +32,10 @@ export const POST = async (req: NextRequest) => {
 		purpose,
 	});
 
+	const allIntermediateIdeas: string[][] = [];
+
 	const run = async (previousNodes: string[]): Promise<string[]> => {
-		const intermediateNodes = await RunnableSequence.from([
+		const intermediateIdeas = await RunnableSequence.from([
 			generateIdeaFromTwoIdeasPromptTemplate,
 			model,
 			new StringOutputParser(),
@@ -48,13 +50,21 @@ export const POST = async (req: NextRequest) => {
 			})),
 		);
 
-		if (intermediateNodes.length === 1) {
-			return intermediateNodes;
+		allIntermediateIdeas.push(intermediateIdeas);
+
+		if (intermediateIdeas.length === 1) {
+			return intermediateIdeas;
 		}
-		return await run(intermediateNodes);
+		return await run(intermediateIdeas);
 	};
 
-	run(initialIdeas);
+	const finalIdea = (await run(initialIdeas))[0];
+
+	return NextResponse.json({
+		initialIdeas,
+		allIntermediateIdeas,
+		finalIdea,
+	});
 };
 
 /**
