@@ -6,7 +6,7 @@ import {
 	generateInitialIdeasPromptTemplate,
 } from "@/lib/prompts";
 import {
-	CommaSeparatedListOutputParser,
+	NumberedListOutputParser,
 	StringOutputParser,
 } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
@@ -25,14 +25,16 @@ export const POST = async (req: NextRequest) => {
 	const initialIdeas = await RunnableSequence.from([
 		generateInitialIdeasPromptTemplate,
 		model,
-		new CommaSeparatedListOutputParser(),
+		new NumberedListOutputParser(),
 	]).invoke({
 		initialIdeasCount,
-		domains,
-		technologies,
+		domains: domains.join(", "),
+		technologies: technologies.join(", "),
 		requirements,
 		purpose,
 	});
+
+	console.log("Got initial ideas", initialIdeas);
 
 	// A recursive function that generates intermediate ideas until only one idea is left.
 	const run = async (
@@ -46,22 +48,27 @@ export const POST = async (req: NextRequest) => {
 		]).batch(
 			createIdeaGroupings(previousNodes).map(([idea1, idea2]) => ({
 				purpose,
-				domains,
+				domains: domains.join(", "),
 				requirements,
 				idea1,
 				idea2,
-				technologies,
+				technologies: technologies.join(", "),
 			})),
 		);
+		console.log("Got intermediate ideas", intermediateIdeas);
 		allIntermediateIdeas.push(intermediateIdeas);
 		return intermediateIdeas.length === 1
 			? intermediateIdeas
 			: await run(intermediateIdeas, allIntermediateIdeas);
 	};
 
+	console.log("Running the recursive function");
+
 	// Generate the final idea from the initial set of ideas
 	const allIntermediateIdeas: string[][] = [];
 	const finalIdea = (await run(initialIdeas, allIntermediateIdeas))[0];
+
+	console.log("Got final idea", finalIdea);
 
 	return NextResponse.json({
 		initialIdeas,

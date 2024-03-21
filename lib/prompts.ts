@@ -8,7 +8,9 @@ const generateInitialIdeasPrompt = endent`
 
   I want to use {technologies} for it.
 
-  Generate comma separated list of ideas and each idea should be just a single sentence.
+  Generate list of ideas where each idea should be just a single sentence and start with a new line and
+	list number.
+
 	You must just start generating ideas without any introductions.
 `;
 
