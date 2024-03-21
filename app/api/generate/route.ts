@@ -18,8 +18,10 @@ import { RunnableSequence } from "@langchain/core/runnables";
 export const POST = async (req: NextRequest) => {
 	const { requirements, domains, initialIdeasCount, purpose, technologies } =
 		generateInputSchema.parse(await req.json());
+
 	const model = new ChatOpenAI();
 
+	// Generate initial set of ideas
 	const initialIdeas = await RunnableSequence.from([
 		generateInitialIdeasPromptTemplate,
 		model,
@@ -32,9 +34,11 @@ export const POST = async (req: NextRequest) => {
 		purpose,
 	});
 
-	const allIntermediateIdeas: string[][] = [];
-
-	const run = async (previousNodes: string[]): Promise<string[]> => {
+	// A recursive function that generates intermediate ideas until only one idea is left.
+	const run = async (
+		previousNodes: string[],
+		allIntermediateIdeas: string[][],
+	): Promise<string[]> => {
 		const intermediateIdeas = await RunnableSequence.from([
 			generateIdeaFromTwoIdeasPromptTemplate,
 			model,
@@ -49,16 +53,15 @@ export const POST = async (req: NextRequest) => {
 				technologies,
 			})),
 		);
-
 		allIntermediateIdeas.push(intermediateIdeas);
-
-		if (intermediateIdeas.length === 1) {
-			return intermediateIdeas;
-		}
-		return await run(intermediateIdeas);
+		return intermediateIdeas.length === 1
+			? intermediateIdeas
+			: await run(intermediateIdeas, allIntermediateIdeas);
 	};
 
-	const finalIdea = (await run(initialIdeas))[0];
+	// Generate the final idea from the initial set of ideas
+	const allIntermediateIdeas: string[][] = [];
+	const finalIdea = (await run(initialIdeas, allIntermediateIdeas))[0];
 
 	return NextResponse.json({
 		initialIdeas,
