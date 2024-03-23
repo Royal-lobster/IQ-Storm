@@ -29,8 +29,8 @@ export const POST = async (req: NextRequest) => {
 
 
 	const schema = z.object({
-		title: z.string().describe("Title of the idea"),
-		Description: z.string().describe("description describing how the technologies can be used for the idea"),
+		title: z.array(z.string()).describe("Title of the idea"),
+		Description: z.array(z.string()).describe("description describing how the technologies can be used for the idea"),
 	  });
 
 
@@ -47,9 +47,9 @@ export const POST = async (req: NextRequest) => {
 
 
 	const prompt =`
-		Generate ${initialIdeasCount} ideas for ${purpose} purpose on the domains - ${domains}.\n
+		Generate ${initialIdeasCount} unique ideas for ${purpose} purpose on the domains - ${domains}.\n
 		I want to use these technologies in the generated idea - ${technologies}. So make sure to generate the idea which can make use these technologies\n
-		Also describe how to use these technologies in the idea.
+		Also describe how to use these technologies for the idea in the description.
 	`
 	  
 	const model = new ChatOpenAI({
