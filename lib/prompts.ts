@@ -2,26 +2,23 @@ import { PromptTemplate } from "@langchain/core/prompts";
 import endent from "endent";
 
 const generateInitialIdeasPrompt = endent`
-  Generate {initialIdeasCount} ideas for {purpose} in {domains}. with the following requirements
+Generate {initialIdeasCount} unique ideas for {purpose} purpose on the domains - {domains}.\n
 
-  {requirements}
+I want to use these technologies in the generated idea - {technologies}. So make sure to generate the idea which can make use these technologies.\n
 
-  I want to use {technologies} for it.
+Also describe how to use these technologies for the idea in the description.\n
 
-  Generate list of ideas where each idea should be just a single sentence and start with a new line and
-	list number.
-
-	You must just start generating ideas without any introductions.
+The additional requirements for the generated idea are - {requirements}
 `;
 
 export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 	template: generateInitialIdeasPrompt,
 	inputVariables: [
 		"initialIdeasCount",
+		"purpose",
 		"domains",
 		"technologies",
 		"requirements",
-		"purpose",
 	],
 });
 

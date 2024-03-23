@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
 
 	const schema = z.object({
 		title: z.array(z.string()).describe("Title of the idea"),
-		Description: z.array(z.string()).describe("description describing how the technologies can be used for the idea"),
+		Description: z.array(z.string()).describe("descriptions describing how the technologies can be used for each idea in order and dont mention the title again here"),
 	  });
 
 
@@ -46,11 +46,7 @@ export const POST = async (req: NextRequest) => {
 	};
 
 
-	const prompt =`
-		Generate ${initialIdeasCount} unique ideas for ${purpose} purpose on the domains - ${domains}.\n
-		I want to use these technologies in the generated idea - ${technologies}. So make sure to generate the idea which can make use these technologies\n
-		Also describe how to use these technologies for the idea in the description.
-	`
+	const prompt = generateInitialIdeasPromptTemplate
 	  
 	const model = new ChatOpenAI({
 		modelName: 'gpt-3.5-turbo',
@@ -59,7 +55,9 @@ export const POST = async (req: NextRequest) => {
 	.bind(modelParams)
 	.pipe(parser)
 
-	const initialIdeas = await model.invoke([new HumanMessage(prompt)])
+	const chain = prompt.pipe(model);
+
+	const initialIdeas = await chain.invoke({ initialIdeasCount: initialIdeasCount, purpose: purpose, domains: domains, technologies: technologies, requirements: requirements });
 
 	console.log("Got initial ideas", initialIdeas);
 
