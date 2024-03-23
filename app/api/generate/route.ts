@@ -16,8 +16,7 @@ import { RunnableSequence } from "@langchain/core/runnables";
  * necessary input parameters and generates ideas based on them.
  */
 export const POST = async (req: NextRequest) => {
-	const { requirements, domains, initialIdeasCount, purpose, technologies } =
-		generateInputSchema.parse(await req.json());
+	const { requirements, ideas } = generateInputSchema.parse(await req.json());
 
 	const model = new ChatOpenAI();
 
