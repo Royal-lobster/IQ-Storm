@@ -17,6 +17,6 @@ export const ideaSchema = z.object({
 
 export const generateInputSchema = z.object({
 	requirements: requirementsSchema,
-	ideaCount: z.number().min(1).max(10),
+	ideaCount: z.number().min(1).max(10).default(2),
 	ideas: ideaSchema.array(),
 });
