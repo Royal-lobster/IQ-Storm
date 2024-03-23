@@ -10,71 +10,98 @@ import {
 	StringOutputParser,
 } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
+import { JsonOutputFunctionsParser } from "langchain/output_parsers";
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
+import { HumanMessage } from "@langchain/core/messages";
+
 
 /**
  * Handles the POST request for generating ideas. It takes in all
  * necessary input parameters and generates ideas based on them.
  */
 export const POST = async (req: NextRequest) => {
+	
 	const { requirements, domains, initialIdeasCount, purpose, technologies } =
 		generateInputSchema.parse(await req.json());
 
-	const model = new ChatOpenAI();
+	const parser = new JsonOutputFunctionsParser();
 
-	// Generate initial set of ideas
-	const initialIdeas = await RunnableSequence.from([
-		generateInitialIdeasPromptTemplate,
-		model,
-		new NumberedListOutputParser(),
-	]).invoke({
-		initialIdeasCount,
-		domains: domains.join(", "),
-		technologies: technologies.join(", "),
-		requirements,
-		purpose,
-	});
+
+	const schema = z.object({
+		title: z.string().describe("Title of the idea"),
+		Description: z.string().describe("description describing how the technologies can be used for the idea"),
+	  });
+
+
+	const modelParams = {
+		functions: [
+			{
+				name: "ideaGen",
+				description: "Generates ideas given requirements",
+				parameters: zodToJsonSchema(schema),
+			},
+		],
+		function_call: { name: "ideaGen" },
+	};
+
+
+	const prompt =`
+		Generate me ${initialIdeasCount} ideas for ${purpose} purpose on the domains - ${domains}.\n
+		I want to use these technologies in the generated idea - ${technologies}. So make sure to generate the idea which can make use these technologies\n
+		Also describe how to use these technologies in the idea.
+	`
+	  
+	const model = new ChatOpenAI({
+		modelName: 'gpt-3.5-turbo',
+		temperature: 0,
+	})
+	.bind(modelParams)
+	.pipe(parser)
+
+	const initialIdeas = await model.invoke([new HumanMessage(prompt)])
 
 	console.log("Got initial ideas", initialIdeas);
 
 	// A recursive function that generates intermediate ideas until only one idea is left.
-	const run = async (
-		previousNodes: string[],
-		allIntermediateIdeas: string[][],
-	): Promise<string[]> => {
-		const intermediateIdeas = await RunnableSequence.from([
-			generateIdeaFromTwoIdeasPromptTemplate,
-			model,
-			new StringOutputParser(),
-		]).batch(
-			createIdeaGroupings(previousNodes).map(([idea1, idea2]) => ({
-				purpose,
-				domains: domains.join(", "),
-				requirements,
-				idea1,
-				idea2,
-				technologies: technologies.join(", "),
-			})),
-		);
-		console.log("Got intermediate ideas", intermediateIdeas);
-		allIntermediateIdeas.push(intermediateIdeas);
-		return intermediateIdeas.length === 1
-			? intermediateIdeas
-			: await run(intermediateIdeas, allIntermediateIdeas);
-	};
+	// const run = async (
+	// 	previousNodes: string[],
+	// 	allIntermediateIdeas: string[][],
+	// ): Promise<string[]> => {
+	// 	const intermediateIdeas = await RunnableSequence.from([
+	// 		generateIdeaFromTwoIdeasPromptTemplate,
+	// 		model,
+	// 		new StringOutputParser(),
+	// 	]).batch(
+	// 		createIdeaGroupings(previousNodes).map(([idea1, idea2]) => ({
+	// 			purpose,
+	// 			domains: domains.join(", "),
+	// 			requirements,
+	// 			idea1,
+	// 			idea2,
+	// 			technologies: technologies.join(", "),
+	// 		})),
+	// 	);
+	// 	console.log("Got intermediate ideas", intermediateIdeas);
+	// 	allIntermediateIdeas.push(intermediateIdeas);
+	// 	return intermediateIdeas.length === 1
+	// 		? intermediateIdeas
+	// 		: await run(intermediateIdeas, allIntermediateIdeas);
+	// };
 
-	console.log("Running the recursive function");
+	// console.log("Running the recursive function");
 
-	// Generate the final idea from the initial set of ideas
-	const allIntermediateIdeas: string[][] = [];
-	const finalIdea = (await run(initialIdeas, allIntermediateIdeas))[0];
+	// // Generate the final idea from the initial set of ideas
+	// const allIntermediateIdeas: string[][] = [];
+	// const finalIdea = (await run(initialIdeas, allIntermediateIdeas))[0];
 
-	console.log("Got final idea", finalIdea);
+	// console.log("Got final idea", finalIdea);
 
-	return NextResponse.json({
-		initialIdeas,
-		allIntermediateIdeas,
-		finalIdea,
-	});
+	// return NextResponse.json({
+	// 	initialIdeas,
+	// 	allIntermediateIdeas,
+	// 	finalIdea,
+	// });
 };
 
 /**
