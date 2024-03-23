@@ -1,8 +1,9 @@
 import { PromptTemplate } from "@langchain/core/prompts";
 import endent from "endent";
 
+// Initial prompt for generating ideas ========================================
 const generateInitialIdeasPrompt = endent`
-  Generate {initialIdeasCount} ideas for {purpose} in {domains}. with the following requirements
+  Generate {ideaCount} ideas for {purpose} in {domains}. with the following requirements
 
   {requirements}
 
@@ -13,11 +14,10 @@ const generateInitialIdeasPrompt = endent`
 
 	You must just start generating ideas without any introductions.
 `;
-
 export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 	template: generateInitialIdeasPrompt,
 	inputVariables: [
-		"initialIdeasCount",
+		"ideaCount",
 		"domains",
 		"technologies",
 		"requirements",
@@ -25,29 +25,30 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 	],
 });
 
-const generateIdeaFromTwoIdeasPrompt = endent`
-  There is a {purpose} in {domains}. with the following requirements
+// Prompt for generating ideas based on feedback ===============================
+export const generateIdeaBasedOnFeedbackPrompt = endent`
+	So far, I liked these Ideas:
+	{likedIdeas}
 
-  {requirements}
+	And I didn't like these Ideas:
+	{dislikedIdeas}
 
-  Based on these requirements, there are 2 contestant that proposed these 2 ideas:
-  - {idea1}
-  - {idea2}
-
-  I want to use {technologies} for it.
-
-  Generate a very novel idea inspiring from these two ideas yet not copying from them.
-	The idea should be just a single sentence. You must just start generating idea without any introductions.
+	Please generate an idea based on the feedback.
 `;
-
 export const generateIdeaFromTwoIdeasPromptTemplate = new PromptTemplate({
-	template: generateIdeaFromTwoIdeasPrompt,
-	inputVariables: [
-		"purpose",
-		"domains",
-		"requirements",
-		"idea1",
-		"idea2",
-		"technologies",
-	],
+	template: generateIdeaBasedOnFeedbackPrompt,
+	inputVariables: ["likedIdeas", "dislikedIdeas"],
+});
+
+// Prompt for formatting ideas with feedback ===================================
+export const likedIdeaPrompt = endent`- {ideaTitle} because it is {feedbackReason}`;
+export const linkedIdeaPromptTemplate = new PromptTemplate({
+	template: likedIdeaPrompt,
+	inputVariables: ["ideaTitle", "feedbackReason"],
+});
+
+export const dislikedIdeaPrompt = endent`- {ideaTitle} because it is not {feedbackReason}`;
+export const dislikedIdeaPromptTemplate = new PromptTemplate({
+	template: dislikedIdeaPrompt,
+	inputVariables: ["ideaTitle", "feedbackReason"],
 });

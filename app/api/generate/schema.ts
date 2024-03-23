@@ -1,9 +1,22 @@
 import { z } from "zod";
 
-export const generateInputSchema = z.object({
+export const requirementsSchema = z.object({
 	purpose: z.string(),
-	requirements: z.string(),
+	description: z.string(),
 	domains: z.string().array(),
 	technologies: z.string().array(),
 	initialIdeasCount: z.number().min(1).max(50),
+});
+
+export const ideaSchema = z.object({
+	title: z.string(),
+	description: z.string(),
+	feedback: z.enum(["positive", "negative"]),
+	feedbackReason: z.enum(["innovative", "feasible", "impactful", "relent"]),
+});
+
+export const generateInputSchema = z.object({
+	requirements: requirementsSchema,
+	ideaCount: z.number().min(1).max(10),
+	ideas: ideaSchema.array(),
 });
