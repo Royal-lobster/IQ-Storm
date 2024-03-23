@@ -47,7 +47,7 @@ export const POST = async (req: NextRequest) => {
 
 
 	const prompt =`
-		Generate me ${initialIdeasCount} ideas for ${purpose} purpose on the domains - ${domains}.\n
+		Generate ${initialIdeasCount} ideas for ${purpose} purpose on the domains - ${domains}.\n
 		I want to use these technologies in the generated idea - ${technologies}. So make sure to generate the idea which can make use these technologies\n
 		Also describe how to use these technologies in the idea.
 	`
@@ -97,11 +97,11 @@ export const POST = async (req: NextRequest) => {
 
 	// console.log("Got final idea", finalIdea);
 
-	// return NextResponse.json({
-	// 	initialIdeas,
-	// 	allIntermediateIdeas,
-	// 	finalIdea,
-	// });
+	return NextResponse.json({
+		initialIdeas,
+		// allIntermediateIdeas,
+		// finalIdea,
+	});
 };
 
 /**
