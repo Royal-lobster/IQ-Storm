@@ -1,4 +1,5 @@
 "use client";
+
 import { z } from "zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -16,15 +17,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
 
 function RequirementsForm() {
+	const router = useRouter();
+
 	const form = useForm<z.infer<typeof requirementsFormSchema>>({
 		resolver: zodResolver(requirementsFormSchema),
 	});
 
 	function onSubmit(values: z.infer<typeof requirementsFormSchema>) {
-		//TODO: send data to server
-		console.log(values);
+		const url = new URL(window.location.origin);
+		url.pathname = "/ideate";
+		for (const key in values) {
+			url.searchParams.append(
+				key,
+				encodeURIComponent(values[key as keyof typeof values]),
+			);
+		}
+		router.push(url.toString());
 	}
 
 	return (
