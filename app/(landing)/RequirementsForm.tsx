@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-import { type IdeateInput, ideateInputSchema } from "../api/generate/schema";
+import { type IdeateInput, ideateInputSchema } from "../api/ideate/schema";
 
 function RequirementsForm() {
 	const router = useRouter();

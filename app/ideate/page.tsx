@@ -1,4 +1,4 @@
-import { ideateInputSchema } from "../api/generate/schema";
+import { ideateInputSchema } from "../api/ideate/schema";
 import Header from "./Header";
 
 export interface IdeatePageProps {
