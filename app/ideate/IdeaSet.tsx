@@ -3,9 +3,10 @@
 import React from "react";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import IdeaCard from "./IdeaCard";
+import type { Idea } from "../api/ideate/schema";
 
 interface IdeaCardsProps {
-  ideas: { title: string; description: string }[];
+  ideas: Idea[];
   disabled?: boolean;
 }
 

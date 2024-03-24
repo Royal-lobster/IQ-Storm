@@ -1,4 +1,4 @@
-import { ideateInputSchema } from "../api/ideate/schema";
+import { ideateInputSchema, requirementsSchema } from "../api/ideate/schema";
 import Header from "./Header";
 import IdeaSet from "./IdeaSet";
 
@@ -8,7 +8,7 @@ export interface IdeatePageProps {
 
 function IdeatePage({ searchParams }: IdeatePageProps) {
 	const { purpose, domains, technologies } =
-		ideateInputSchema.parse(searchParams);
+		requirementsSchema.parse(searchParams);
 	return (
 		<div className="container py-20">
 			<Header purpose={purpose} domains={domains} technologies={technologies} />
