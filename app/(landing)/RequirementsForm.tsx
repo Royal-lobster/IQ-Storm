@@ -18,15 +18,16 @@ import { Input } from "@/components/ui/input";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import { type IdeateInput, ideateInputSchema } from "../api/generate/schema";
 
 function RequirementsForm() {
 	const router = useRouter();
 
-	const form = useForm<z.infer<typeof requirementsFormSchema>>({
-		resolver: zodResolver(requirementsFormSchema),
+	const form = useForm<IdeateInput>({
+		resolver: zodResolver(ideateInputSchema),
 	});
 
-	function onSubmit(values: z.infer<typeof requirementsFormSchema>) {
+	function onSubmit(values: IdeateInput) {
 		const url = new URL(window.location.origin);
 		url.pathname = "/ideate";
 		for (const key in values) {
@@ -126,11 +127,5 @@ function RequirementsForm() {
 		</Form>
 	);
 }
-const requirementsFormSchema = z.object({
-	purpose: z.string(),
-	domains: z.string(),
-	technologies: z.string(),
-	additionalInformation: z.string(),
-});
 
 export default RequirementsForm;

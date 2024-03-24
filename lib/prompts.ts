@@ -4,7 +4,7 @@ import endent from "endent";
 const generateInitialIdeasPrompt = endent`
   Generate {initialIdeasCount} ideas for {purpose} in {domains}. with the following requirements
 
-  {requirements}
+  {additionalInformation}
 
   I want to use {technologies} for it.
 
@@ -20,7 +20,7 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 		"initialIdeasCount",
 		"domains",
 		"technologies",
-		"requirements",
+		"additionalInformation",
 		"purpose",
 	],
 });
@@ -28,7 +28,7 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 const generateIdeaFromTwoIdeasPrompt = endent`
   There is a {purpose} in {domains}. with the following requirements
 
-  {requirements}
+  {additionalInformation}
 
   Based on these requirements, there are 2 contestant that proposed these 2 ideas:
   - {idea1}
@@ -45,7 +45,7 @@ export const generateIdeaFromTwoIdeasPromptTemplate = new PromptTemplate({
 	inputVariables: [
 		"purpose",
 		"domains",
-		"requirements",
+		"additionalInformation",
 		"idea1",
 		"idea2",
 		"technologies",

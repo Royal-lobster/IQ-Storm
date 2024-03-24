@@ -1,6 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { NextResponse, type NextRequest } from "next/server";
-import { generateInputSchema } from "./schema";
+import { ideateInputSchema } from "./schema";
 import {
 	generateIdeaFromTwoIdeasPromptTemplate,
 	generateInitialIdeasPromptTemplate,
@@ -16,8 +16,8 @@ import { RunnableSequence } from "@langchain/core/runnables";
  * necessary input parameters and generates ideas based on them.
  */
 export const POST = async (req: NextRequest) => {
-	const { requirements, domains, initialIdeasCount, purpose, technologies } =
-		generateInputSchema.parse(await req.json());
+	const { domains, additionalInformation, purpose, technologies } =
+		ideateInputSchema.parse(await req.json());
 
 	const model = new ChatOpenAI();
 
@@ -27,10 +27,10 @@ export const POST = async (req: NextRequest) => {
 		model,
 		new NumberedListOutputParser(),
 	]).invoke({
-		initialIdeasCount,
-		domains: domains.join(", "),
-		technologies: technologies.join(", "),
-		requirements,
+		initialIdeasCount: 2,
+		domains: domains,
+		technologies: technologies,
+		additionalInformation,
 		purpose,
 	});
 
@@ -48,11 +48,11 @@ export const POST = async (req: NextRequest) => {
 		]).batch(
 			createIdeaGroupings(previousNodes).map(([idea1, idea2]) => ({
 				purpose,
-				domains: domains.join(", "),
-				requirements,
+				domains: domains,
+				additionalInformation,
 				idea1,
 				idea2,
-				technologies: technologies.join(", "),
+				technologies,
 			})),
 		);
 		console.log("Got intermediate ideas", intermediateIdeas);

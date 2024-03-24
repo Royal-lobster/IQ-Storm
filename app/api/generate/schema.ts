@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-export const generateInputSchema = z.object({
-	purpose: z.string(),
-	requirements: z.string(),
-	domains: z.string().array(),
-	technologies: z.string().array(),
-	initialIdeasCount: z.number().min(1).max(50),
+export const ideateInputSchema = z.object({
+	purpose: z.string().transform((val) => decodeURIComponent(val)),
+	domains: z.string().transform((val) => decodeURIComponent(val)),
+	technologies: z.string().transform((val) => decodeURIComponent(val)),
+	additionalInformation: z.string().transform((val) => decodeURIComponent(val)),
 });
+
+export type IdeateInput = z.infer<typeof ideateInputSchema>;

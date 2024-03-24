@@ -6,7 +6,7 @@ export default function Home() {
 		<main className="flex flex-col md:flex-row min-h-screen">
 			<div className="md:flex-1 grid place-items-center hero-pattern border-r border-pink-500 p-10">
 				<Image
-					src="/iq-storm-large.png"
+					src="/iq-storm.png"
 					alt="A picture of brain with lightning bolt below it"
 					width={477}
 					height={477}
