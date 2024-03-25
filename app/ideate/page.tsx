@@ -1,6 +1,5 @@
-import { ideateInputSchema, requirementsSchema } from "../api/ideate/schema";
+import { requirementsSchema } from "../api/ideate/schema";
 import Header from "./Header";
-import IdeaSet from "./IdeaSet";
 
 export interface IdeatePageProps {
 	searchParams: Record<string, string>;
