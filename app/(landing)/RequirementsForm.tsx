@@ -18,16 +18,16 @@ import { Input } from "@/components/ui/input";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-import { type IdeateInput, ideateInputSchema } from "../api/ideate/schema";
+import { requirementsSchema, type Requirements } from "../api/ideate/schema";
 
 function RequirementsForm() {
 	const router = useRouter();
 
-	const form = useForm<IdeateInput>({
-		resolver: zodResolver(ideateInputSchema),
+	const form = useForm<Requirements>({
+		resolver: zodResolver(requirementsSchema),
 	});
 
-	function onSubmit(values: IdeateInput) {
+	function onSubmit(values: Requirements) {
 		const url = new URL(window.location.origin);
 		url.pathname = "/ideate";
 		for (const key in values) {
