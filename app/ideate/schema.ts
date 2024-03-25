@@ -15,14 +15,14 @@ export const requirementsSchema = z.object({
 		.optional(),
 });
 
-export const previousIdeaSchema = z.object({
+export const IdeaSetsSchema = z.object({
 	ideas: z.array(ideaSchema),
-	chosenIndex: z.number().optional(),
+	likedIdeaIndex: z.number().optional(),
 	feedback: z.string().optional(),
 });
 
 export const ideateInputSchema = z.object({
-	previousIdeas: previousIdeaSchema.array(),
+	ideaSets: IdeaSetsSchema.array(),
 	requirements: requirementsSchema,
 });
 
@@ -31,7 +31,7 @@ export const ideateOutputSchema = z.object({
 });
 
 export type Idea = z.infer<typeof ideaSchema>;
-export type PreviousIdea = z.infer<typeof previousIdeaSchema>;
+export type IdeaSets = z.infer<typeof IdeaSetsSchema>;
 export type Requirements = z.infer<typeof requirementsSchema>;
 export type IdeateInput = z.infer<typeof ideateInputSchema>;
 export type IdeateOutput = z.infer<typeof ideateOutputSchema>;

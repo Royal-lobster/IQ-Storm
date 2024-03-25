@@ -1,7 +1,7 @@
 "use client";
 
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import type { Idea } from "../api/ideate/schema";
+import type { Idea } from "./schema";
 import IdeaCard from "./IdeaCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { HeartIcon } from '@radix-ui/react-icons';

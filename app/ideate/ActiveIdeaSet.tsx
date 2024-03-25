@@ -3,7 +3,7 @@
 import React from "react";
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import IdeaCard from "./IdeaCard";
-import type { Idea } from "../api/ideate/schema";
+import type { Idea } from "./schema";
 import LoadingIdeaCard from "./LoadingIdeaCard";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, ReloadIcon } from "@radix-ui/react-icons";
@@ -16,20 +16,31 @@ interface IdeaSetProps {
   isFetching?: boolean;
   defaultCheckedIdea?: string;
   count: number;
+  handleCreateIdeaSet: (likedIdeaIndex: number, feedback: string) => void;
+
 }
 
-function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea }: IdeaSetProps) {
-  const [likedIdea, setLikedIdea] = React.useState<string | undefined>(defaultCheckedIdea);
+function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCreateIdeaSet }: IdeaSetProps) {
+  const [likedIdeaIndex, setLikedIdeaIndex] = React.useState<string | undefined>(defaultCheckedIdea);
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const feedback = data.get("feedback") as string;
+    const likedIdeaIndexNumber = data.get("likedIdeaIndex") as string
+
+    handleCreateIdeaSet(Number(likedIdeaIndexNumber), feedback);
+  }
 
   return (
     <div>
-      <form className="space-y-6 border p-6 w-max rounded-md bg-primary/10 border-primary">
-        <Label htmlFor="likedIdea" className="text-xl font-semibold text-primary">Which one do you like?</Label>
+      <form className="space-y-6 border p-6 w-max rounded-md bg-primary/10 border-primary" onSubmit={handleFormSubmit}>
+        <Label htmlFor="likedIdeaIndex" className="text-xl font-semibold text-primary">Which one do you like?</Label>
         <RadioGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
           disabled={isFetching}
-          onValueChange={setLikedIdea}
-          value={likedIdea}
-          name="likedIdea"
+          onValueChange={setLikedIdeaIndex}
+          value={likedIdeaIndex}
+          name="likedIdeaIndex"
         >
           {isFetching
             ? range(count).map((i) => <LoadingIdeaCard key={i} />)
@@ -39,7 +50,7 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea }: IdeaSet
               </RadioGroup.Item>
             ))}
         </RadioGroup.Root>
-        {likedIdea && (
+        {likedIdeaIndex && (
           <div className="grid w-full gap-1.5">
             <Label htmlFor="feedback">Why did you like it ?</Label>
             <Textarea placeholder="Type your message here." id="feedback" />
@@ -49,15 +60,15 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea }: IdeaSet
           </div>
         )}
         <Button variant="outline" type="submit" className="flex translate-y-10 !mt-0 mx-auto border-primary">
-          {likedIdea ? "Generate More" : "Don't like any"}
-          {likedIdea ? <PlusIcon /> : <ReloadIcon />}
+          {likedIdeaIndex ? "Generate More" : "Don't like any"}
+          {likedIdeaIndex ? <PlusIcon /> : <ReloadIcon />}
         </Button>
       </form >
 
-      {likedIdea && <div className="flex justify-end items-center mt-20 gap-6">
+      {likedIdeaIndex && <div className="flex justify-end items-center mt-20 gap-6">
         <p className="text-right">
           <span>Wanna start with implementing</span> <br />
-          <span className="text-primary"> {ideas[Number(likedIdea) - 1].title}</span>
+          <span className="text-primary"> {ideas[Number(likedIdeaIndex) - 1].title}</span>
         </p>
         <Button>Start Implementing</Button>
       </div>}
