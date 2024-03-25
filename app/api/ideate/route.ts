@@ -48,7 +48,7 @@ export const POST = async (req: NextRequest) => {
  * Generates ideas based on the provided prompt.
  * This function encapsulates the logic to call the OpenAI API.
  */
-async function generateIdeas(prompt, requirements: requirements, previousIdeas?: { ideas: { title: string[]; description: string[]; }; chosenIndex: number; feedback: string; }) {
+async function generateIdeas(prompt:any, requirements: requirements, previousIdeas?: { ideas: { title: string[]; description: string[]; }; chosenIndex: number; feedback: string; }) {
   const parser = new JsonOutputFunctionsParser();
 
   const schema = z.object({
@@ -67,7 +67,15 @@ async function generateIdeas(prompt, requirements: requirements, previousIdeas?:
     function_call: { name: "ideaGen" },
   };
 
-  let invokeParams = {
+  let invokeParams: {
+    initialIdeasCount: number;
+    purpose: string;
+    domains: string;
+    technologies: string;
+    additionalInformation: string;
+    previousIdea?: string;
+    feedback?: string;
+  } = {
     initialIdeasCount: 2,
     purpose: requirements.purpose,
     domains: requirements.domains,
@@ -81,11 +89,8 @@ async function generateIdeas(prompt, requirements: requirements, previousIdeas?:
 	const selectedDescription = ideas.description[chosenIndex];
     const previousIdeaStr = `title: ${selectedTitle}\ndescription: ${selectedDescription}`;
 
-	invokeParams = {
-		...invokeParams,
-		previousIdea: previousIdeaStr,
-		feedback,
-	  };
+	invokeParams.previousIdea = previousIdeaStr;
+    invokeParams.feedback = feedback;
   }
 
 
