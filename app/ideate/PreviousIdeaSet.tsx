@@ -15,7 +15,7 @@ interface IdeaSetProps {
 
 function PreviousIdeaSet({ ideas, likedIdea, feedback }: IdeaSetProps) {
   return (
-    <div className="border p-6 w-max rounded-md">
+    <div className="border border-dashed p-6 w-max rounded-md">
       <RadioGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
         disabled={true}
         value={likedIdea}
