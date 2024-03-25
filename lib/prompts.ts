@@ -8,7 +8,7 @@ I want to use these technologies in the generated idea - {technologies}. So make
 
 Also describe how to use these technologies for the idea in the description.\n
 
-The additional requirements for the generated idea are - {requirements}
+The additional requirements for the generated idea are - {additionalInformation}
 `;
 
 export const generateInitialIdeasPromptTemplate = new PromptTemplate({
@@ -18,7 +18,7 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 		"purpose",
 		"domains",
 		"technologies",
-		"requirements",
+		"additionalInformation",
 		"purpose",
 	],
 });

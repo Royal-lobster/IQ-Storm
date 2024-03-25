@@ -1,6 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { NextResponse, type NextRequest } from "next/server";
-import { ideateInputSchema } from "./schema";
+import { ideateInputSchema, requirementsSchema } from "./schema";
 import {
 	generateIdeaFromTwoIdeasPromptTemplate,
 	generateInitialIdeasPromptTemplate,
@@ -21,25 +21,14 @@ import { HumanMessage } from "@langchain/core/messages";
  * necessary input parameters and generates ideas based on them.
  */
 export const POST = async (req: NextRequest) => {
-<<<<<<< HEAD:app/api/generate/route.ts
-	
-	const { requirements, domains, initialIdeasCount, purpose, technologies } =
-		generateInputSchema.parse(await req.json());
-=======
-	const {
-		requirements: { domains, additionalInformation, purpose, technologies },
-	} = ideateInputSchema.parse(await req.json());
->>>>>>> 4130778f2c3e72415435677139edde7e4dbc7050:app/api/ideate/route.ts
+	const { domains, additionalInformation, purpose, technologies } = requirementsSchema.parse(await req.json());
 
 	const parser = new JsonOutputFunctionsParser();
-
-<<<<<<< HEAD:app/api/generate/route.ts
 
 	const schema = z.object({
 		title: z.array(z.string()).describe("Title of the idea"),
 		Description: z.array(z.string()).describe("descriptions describing how the technologies can be used for each idea in order and dont mention the title again here"),
 	  });
-
 
 	const modelParams = {
 		functions: [
@@ -54,7 +43,7 @@ export const POST = async (req: NextRequest) => {
 
 
 	const prompt = generateInitialIdeasPromptTemplate
-	  
+
 	const model = new ChatOpenAI({
 		modelName: 'gpt-3.5-turbo',
 		temperature: 0,
@@ -64,26 +53,11 @@ export const POST = async (req: NextRequest) => {
 
 	const chain = prompt.pipe(model);
 
-	const initialIdeas = await chain.invoke({ initialIdeasCount: initialIdeasCount, purpose: purpose, domains: domains, technologies: technologies, requirements: requirements });
-=======
-	// Generate initial set of ideas
-	const initialIdeas = await RunnableSequence.from([
-		generateInitialIdeasPromptTemplate,
-		model,
-		new NumberedListOutputParser(),
-	]).invoke({
-		initialIdeasCount: 2,
-		domains: domains,
-		technologies: technologies,
-		additionalInformation,
-		purpose,
-	});
->>>>>>> 4130778f2c3e72415435677139edde7e4dbc7050:app/api/ideate/route.ts
+	const initialIdeas = await chain.invoke({ initialIdeasCount: 2, purpose: purpose, domains: domains, technologies: technologies, additionalInformation: additionalInformation });
 
 	console.log("Got initial ideas", initialIdeas);
 
 	// A recursive function that generates intermediate ideas until only one idea is left.
-<<<<<<< HEAD:app/api/generate/route.ts
 	// const run = async (
 	// 	previousNodes: string[],
 	// 	allIntermediateIdeas: string[][],
@@ -95,11 +69,11 @@ export const POST = async (req: NextRequest) => {
 	// 	]).batch(
 	// 		createIdeaGroupings(previousNodes).map(([idea1, idea2]) => ({
 	// 			purpose,
-	// 			domains: domains.join(", "),
-	// 			requirements,
+	// 			domains: domains,
+	// 			additionalInformation,
 	// 			idea1,
 	// 			idea2,
-	// 			technologies: technologies.join(", "),
+	// 			technologies,
 	// 		})),
 	// 	);
 	// 	console.log("Got intermediate ideas", intermediateIdeas);
@@ -108,36 +82,9 @@ export const POST = async (req: NextRequest) => {
 	// 		? intermediateIdeas
 	// 		: await run(intermediateIdeas, allIntermediateIdeas);
 	// };
-=======
-	const run = async (
-		previousNodes: string[],
-		allIntermediateIdeas: string[][],
-	): Promise<string[]> => {
-		const intermediateIdeas = await RunnableSequence.from([
-			generateIdeaFromTwoIdeasPromptTemplate,
-			model,
-			new StringOutputParser(),
-		]).batch(
-			createIdeaGroupings(previousNodes).map(([idea1, idea2]) => ({
-				purpose,
-				domains: domains,
-				additionalInformation,
-				idea1,
-				idea2,
-				technologies,
-			})),
-		);
-		console.log("Got intermediate ideas", intermediateIdeas);
-		allIntermediateIdeas.push(intermediateIdeas);
-		return intermediateIdeas.length === 1
-			? intermediateIdeas
-			: await run(intermediateIdeas, allIntermediateIdeas);
-	};
->>>>>>> 4130778f2c3e72415435677139edde7e4dbc7050:app/api/ideate/route.ts
 
 	// console.log("Running the recursive function");
 
-	// // Generate the final idea from the initial set of ideas
 	// const allIntermediateIdeas: string[][] = [];
 	// const finalIdea = (await run(initialIdeas, allIntermediateIdeas))[0];
 
