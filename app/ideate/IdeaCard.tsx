@@ -7,9 +7,9 @@ interface IdeaCardProps {
 
 function IdeaCard({ title, description }: IdeaCardProps) {
   return (
-    <Card className='max-w-xs group-data-[state=on]:ring-2 ring-primary h-full'>
+    <Card className='max-w-xs group-data-[state=checked]:ring-2 ring-primary h-full'>
       <CardHeader className='text-left'>
-        <CardTitle className='leading-normal group-data-[state=on]:text-primary'>{title}</CardTitle>
+        <CardTitle className='leading-normal group-data-[state=checked]:text-primary'>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
     </Card>
