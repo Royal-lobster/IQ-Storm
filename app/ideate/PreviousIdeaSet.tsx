@@ -6,16 +6,16 @@ import IdeaCard from "./IdeaCard";
 
 interface IdeaSetProps {
   ideas: Idea[];
-  defaultCheckedIdea?: string;
+  likedIdea: string;
 }
 
-function PreviousIdeaSet({ ideas, defaultCheckedIdea }: IdeaSetProps) {
+function PreviousIdeaSet({ ideas, likedIdea }: IdeaSetProps) {
   return (
     <div className="border p-6 w-max rounded-md">
       <ToggleGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
         type="single"
         disabled={true}
-        defaultValue={defaultCheckedIdea}
+        value={likedIdea}
       >
         {ideas.map((idea, i) => (
           <ToggleGroup.Item value={String(i + 1)} className="group" key={idea.title}>
