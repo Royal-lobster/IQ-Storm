@@ -23,29 +23,31 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 	],
 });
 
-const generateIdeaFromTwoIdeasPrompt = endent`
-  There is a {purpose} in {domains}. with the following requirements
+const generateFollowUpIdeasPrompt = endent`
+  Generate {initialIdeasCount} unique ideas for {purpose} purpose on the domains - {domains}.\n
 
-  {additionalInformation}
+  I like this idea -\n{previousIdea}\n
 
-  Based on these requirements, there are 2 contestant that proposed these 2 ideas:
-  - {idea1}
-  - {idea2}
+  So you have to generate idea's going more deeper and iterate idea's around this idea.\n
 
-  I want to use {technologies} for it.
+  My feedback to this idea is - {feedback}, So you have to generate idea's according to my current feedback on idea.\n
 
-  Generate a very novel idea inspiring from these two ideas yet not copying from them.
-	The idea should be just a single sentence. You must just start generating idea without any introductions.
+  I want to use these technologies in the generated idea - {technologies}. So make sure to generate the idea which can make use these technologies.\n
+
+  Also describe how to use these technologies for the idea in the description.\n
+
+  The additional requirements for the generated idea are - {additionalInformation}
 `;
 
-export const generateIdeaFromTwoIdeasPromptTemplate = new PromptTemplate({
-	template: generateIdeaFromTwoIdeasPrompt,
+export const generateFollowUpIdeasPromptTemplate = new PromptTemplate({
+	template: generateFollowUpIdeasPrompt,
 	inputVariables: [
+		"initialIdeasCount",
 		"purpose",
 		"domains",
-		"additionalInformation",
-		"idea1",
-		"idea2",
+		"previousIdea",
+		"feedback",
 		"technologies",
+		"additionalInformation",
 	],
 });

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const ideaSchema = z.object({
-	title: z.string(),
-	description: z.string(),
+	title: z.array(z.string()),
+	description: z.array(z.string()),
 });
 
 export const requirementsSchema = z.object({
@@ -13,13 +13,11 @@ export const requirementsSchema = z.object({
 });
 
 export const ideateInputSchema = z.object({
-	previousIdeas: z.array(
-		z.object({
-			ideas: z.array(ideaSchema),
+	previousIdeas: z.object({
+			ideas: ideaSchema,
 			chosenIndex: z.number(),
 			feedback: z.string(),
 		}),
-	),
 	requirements: requirementsSchema,
 });
 
