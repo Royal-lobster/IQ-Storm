@@ -52,7 +52,7 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 
 	const [ideaSets, setIdeaSets] = useState<IdeaSets[]>(DUMMY_IDEAS);
 
-	const { execute } = useAction(createIdeaSet, {
+	const { execute, status } = useAction(createIdeaSet, {
 		onSuccess: (data) => {
 			const ideaSet = JSON.parse(JSON.stringify(data))
 			setIdeaSets((old) => [...old, ideaSet]);
@@ -99,7 +99,7 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 								key="active-idea-set"
 								ideas={ideaSet.ideas}
 								count={2}
-								isFetching={false}
+								isFetching={status === "executing"}
 								handleCreateIdeaSet={handleCreateIdeaSet}
 							/>
 						)))
