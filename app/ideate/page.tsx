@@ -19,7 +19,7 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 				}, {
 					title: "Decentralized Healthcare Marketplace",
 					description: "A decentralized marketplace where patients can buy and sell healthcare services using cryptocurrencies.",
-				}]} isActive={false} count={2} isFetching={false} />
+				}]} isActive={false} count={2} isFetching={false} defaultCheckedIdea="2" />
 
 				<IdeaSet
 					ideas={[{
