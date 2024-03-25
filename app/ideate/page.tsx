@@ -55,7 +55,8 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 								key={ideaSet.ideas[ideaSet.chosenIndex - 1].title}
 								ideas={ideaSet.ideas}
 								feedback={ideaSet.feedback}
-								likedIdea={String(i + 1)}
+								likedIdea={String(ideaSet.chosenIndex)}
+
 							/>
 						) : (
 							<ActiveIdeaSet

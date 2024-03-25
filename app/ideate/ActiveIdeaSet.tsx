@@ -22,36 +22,46 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea }: IdeaSet
   const [likedIdea, setLikedIdea] = React.useState<string | undefined>(defaultCheckedIdea);
 
   return (
-    <form className="space-y-6 border p-6 w-max rounded-md bg-primary/10 border-primary">
-      <Label htmlFor="likedIdea" className="text-xl font-semibold text-primary">Which one do you like?</Label>
-      <RadioGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
-        disabled={isFetching}
-        onValueChange={setLikedIdea}
-        value={likedIdea}
-        name="likedIdea"
-      >
-        {isFetching
-          ? range(count).map((i) => <LoadingIdeaCard key={i} />)
-          : ideas.map((idea, i) => (
-            <RadioGroup.Item value={String(i + 1)} className="group" key={idea.title}>
-              <IdeaCard title={idea.title} description={idea.description} />
-            </RadioGroup.Item>
-          ))}
-      </RadioGroup.Root>
-      {likedIdea && (
-        <div className="grid w-full gap-1.5">
-          <Label htmlFor="feedback">Why did you like it ?</Label>
-          <Textarea placeholder="Type your message here." id="feedback" />
-          <p className="text-sm text-muted-foreground">
-            This will help both you and me to know what you really want.
-          </p>
-        </div>
-      )}
-      <Button variant="outline" type="submit" className="flex translate-y-10 !mt-0 mx-auto border-primary">
-        {likedIdea ? "Generate More" : "Don't like any"}
-        {likedIdea ? <PlusIcon /> : <ReloadIcon />}
-      </Button>
-    </form >
+    <div>
+      <form className="space-y-6 border p-6 w-max rounded-md bg-primary/10 border-primary">
+        <Label htmlFor="likedIdea" className="text-xl font-semibold text-primary">Which one do you like?</Label>
+        <RadioGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
+          disabled={isFetching}
+          onValueChange={setLikedIdea}
+          value={likedIdea}
+          name="likedIdea"
+        >
+          {isFetching
+            ? range(count).map((i) => <LoadingIdeaCard key={i} />)
+            : ideas.map((idea, i) => (
+              <RadioGroup.Item value={String(i + 1)} className="group" key={idea.title}>
+                <IdeaCard title={idea.title} description={idea.description} />
+              </RadioGroup.Item>
+            ))}
+        </RadioGroup.Root>
+        {likedIdea && (
+          <div className="grid w-full gap-1.5">
+            <Label htmlFor="feedback">Why did you like it ?</Label>
+            <Textarea placeholder="Type your message here." id="feedback" />
+            <p className="text-sm text-muted-foreground">
+              This will help both you and me to know what you really want.
+            </p>
+          </div>
+        )}
+        <Button variant="outline" type="submit" className="flex translate-y-10 !mt-0 mx-auto border-primary">
+          {likedIdea ? "Generate More" : "Don't like any"}
+          {likedIdea ? <PlusIcon /> : <ReloadIcon />}
+        </Button>
+      </form >
+
+      {likedIdea && <div className="flex justify-end items-center mt-20 gap-6">
+        <p className="text-right">
+          <span>Wanna start with implementing</span> <br />
+          <span className="text-primary"> {ideas[Number(likedIdea) - 1].title}</span>
+        </p>
+        <Button>Start Implementing</Button>
+      </div>}
+    </div>
   );
 }
 
