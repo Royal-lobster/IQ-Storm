@@ -1,6 +1,6 @@
 "use client";
 
-import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import * as RadioGroup from '@radix-ui/react-radio-group';
 import type { Idea } from "../api/ideate/schema";
 import IdeaCard from "./IdeaCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -16,17 +16,16 @@ interface IdeaSetProps {
 function PreviousIdeaSet({ ideas, likedIdea, feedback }: IdeaSetProps) {
   return (
     <div className="border p-6 w-max rounded-md">
-      <ToggleGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
-        type="single"
+      <RadioGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
         disabled={true}
         value={likedIdea}
       >
         {ideas.map((idea, i) => (
-          <ToggleGroup.Item value={String(i + 1)} className="group" key={idea.title}>
+          <RadioGroup.Item value={String(i + 1)} className="group" key={idea.title}>
             <IdeaCard title={idea.title} description={idea.description} />
-          </ToggleGroup.Item>
+          </RadioGroup.Item>
         ))}
-      </ToggleGroup.Root>
+      </RadioGroup.Root>
 
       {feedback && (
         <Alert className="mt-4">
