@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-const ideaSchema = z.object({
-	title: z.string(),
-	description: z.string(),
+export const ideaSchema = z.object({
+	title: z.string().describe("Title of the project idea"),
+	description: z.string().describe("A brief description of the idea"),
 });
 
 export const requirementsSchema = z.object({
@@ -12,7 +12,7 @@ export const requirementsSchema = z.object({
 	additionalInformation: z
 		.string()
 		.transform((val) => decodeURIComponent(val))
-		.optional(),
+		.default("NONE"),
 });
 
 export const IdeaSetsSchema = z.object({

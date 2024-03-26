@@ -24,30 +24,3 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 		"purpose",
 	],
 });
-
-const generateIdeaFromTwoIdeasPrompt = endent`
-  There is a {purpose} in {domains}. with the following requirements
-
-  {additionalInformation}
-
-  Based on these requirements, there are 2 contestant that proposed these 2 ideas:
-  - {idea1}
-  - {idea2}
-
-  I want to use {technologies} for it.
-
-  Generate a very novel idea inspiring from these two ideas yet not copying from them.
-	The idea should be just a single sentence. You must just start generating idea without any introductions.
-`;
-
-export const generateIdeaFromTwoIdeasPromptTemplate = new PromptTemplate({
-	template: generateIdeaFromTwoIdeasPrompt,
-	inputVariables: [
-		"purpose",
-		"domains",
-		"additionalInformation",
-		"idea1",
-		"idea2",
-		"technologies",
-	],
-});
