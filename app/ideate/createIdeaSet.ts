@@ -3,7 +3,7 @@
 import { action } from "@/lib/safe-action";
 import { ideaSchema, ideateInputSchema } from "./schema";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
-import { generateInitialIdeasPromptTemplate } from "@/lib/prompts";
+import { generateInitialIdeasPromptTemplate, ideaSetFeedbackPromptTemplate } from "@/lib/prompts";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
@@ -26,7 +26,13 @@ export const createIdeaSet = action(
 		// Gather messages from previous iterations
 		const messages = [new HumanMessage(initialMessage)];
 		for (const ideaSet of ideaSets) {
-			messages.push(new AIMessage(""), new HumanMessage(""));
+      const ideaSuggestion = JSON.stringify(ideaSet.ideas)
+      const ideaFeedback = await ideaSetFeedbackPromptTemplate.format({
+        feedback: ideaSet.feedback,
+        initialIdeasCount: 2,
+        likedIdeaIndex: ideaSet.likedIdeaIndex
+      })
+			messages.push(new AIMessage(ideaSuggestion), new HumanMessage(ideaFeedback));
 		}
 		const prompt = ChatPromptTemplate.fromMessages(messages);
 

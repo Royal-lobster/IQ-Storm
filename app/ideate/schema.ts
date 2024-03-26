@@ -18,7 +18,7 @@ export const requirementsSchema = z.object({
 export const IdeaSetsSchema = z.object({
 	ideas: z.array(ideaSchema),
 	likedIdeaIndex: z.number().optional(),
-	feedback: z.string().optional(),
+	feedback: z.string().default("NONE"),
 });
 
 export const ideateInputSchema = z.object({
@@ -31,7 +31,7 @@ export const ideateOutputSchema = z.object({
 });
 
 export type Idea = z.infer<typeof ideaSchema>;
-export type IdeaSets = z.infer<typeof IdeaSetsSchema>;
+export type IdeaSets = z.input<typeof IdeaSetsSchema>;
 export type Requirements = z.infer<typeof requirementsSchema>;
 export type IdeateInput = z.infer<typeof ideateInputSchema>;
 export type IdeateOutput = z.infer<typeof ideateOutputSchema>;
