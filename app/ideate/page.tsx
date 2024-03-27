@@ -7,55 +7,26 @@ import PreviousIdeaSet from "./PreviousIdeaSet";
 import { useAction } from "next-safe-action/hooks";
 import { createIdeaSet } from "./createIdeaSet";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export interface IdeatePageProps {
 	searchParams: Record<string, string>;
 }
 
-const DUMMY_IDEAS: IdeaSets[] = [
-	{
-		ideas: [
-			{
-				title: "AI-Powered Crypto Trading Bot",
-				description:
-					"A trading bot that uses AI to analyze market trends and make profitable trades.",
-			},
-			{
-				title: "Blockchain-Based Voting System",
-				description:
-					"A secure and transparent voting system that uses blockchain technology to prevent fraud.",
-			},
-		],
-		likedIdeaIndex: 2,
-		feedback: "I like the idea of a voting system.",
-	},
-	{
-		ideas: [
-			{
-				title: "Crypto Lending Platform",
-				description:
-					"A platform that allows users to lend and borrow cryptocurrencies.",
-			},
-			{
-				title: "Decentralized Social Network",
-				description:
-					"A social network that is not controlled by any single entity.",
-			},
-		],
-	}
-]
-
-
 function IdeatePage({ searchParams }: IdeatePageProps) {
 	const { purpose, domains, technologies } =
 		requirementsSchema.parse(searchParams);
 
-	const [ideaSets, setIdeaSets] = useState<IdeaSets[]>(DUMMY_IDEAS);
+	const [ideaSets, setIdeaSets] = useState<IdeaSets[]>([]);
 
 	const { execute, status } = useAction(createIdeaSet, {
 		onSuccess: (data) => {
 			const ideaSet = JSON.parse(JSON.stringify(data))
+			console.log({ ideaSets, ideaSet })
 			setIdeaSets((old) => [...old, ideaSet]);
+		},
+		onError: (error) => {
+			toast.error(error.fetchError || error.serverError || "An error occurred");
 		}
 	})
 
@@ -86,24 +57,21 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 			<Header purpose={purpose} domains={domains} technologies={technologies} />
 			<div className="space-y-10 mt-10 flex flex-col items-center justify-center">
 				{
-					ideaSets.map((ideaSet, i) => (
-						ideaSet.likedIdeaIndex ? (
-							<PreviousIdeaSet
-								key={ideaSet.ideas[ideaSet.likedIdeaIndex - 1].title}
-								ideas={ideaSet.ideas}
-								feedback={ideaSet.feedback}
-								likedIdea={String(ideaSet.likedIdeaIndex)}
-							/>
-						) : (
-							<ActiveIdeaSet
-								key="active-idea-set"
-								ideas={ideaSet.ideas}
-								count={2}
-								isFetching={status === "executing"}
-								handleCreateIdeaSet={handleCreateIdeaSet}
-							/>
-						)))
+					ideaSets.filter(i => i.likedIdeaIndex).map((ideaSet, i) => (
+						<PreviousIdeaSet
+							key={ideaSet.ideas[0].title}
+							ideas={ideaSet.ideas}
+							feedback={ideaSet.feedback}
+							likedIdea={String(ideaSet.likedIdeaIndex)}
+						/>
+					))
 				}
+				<ActiveIdeaSet
+					ideas={ideaSets.length ? ideaSets[ideaSets.length - 1]?.ideas : []}
+					count={2}
+					isFetching={status === "executing" || ideaSets.length === 0}
+					handleCreateIdeaSet={handleCreateIdeaSet}
+				/>
 			</div>
 		</div>
 	);
