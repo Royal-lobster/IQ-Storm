@@ -14,7 +14,7 @@ export interface IdeatePageProps {
 }
 
 function IdeatePage({ searchParams }: IdeatePageProps) {
-	const { purpose, domains, technologies } =
+	const { purpose, domains, technologies, additionalInformation } =
 		requirementsSchema.parse(searchParams);
 
 	const [ideaSets, setIdeaSets] = useState<IdeaSets[]>([]);
@@ -36,7 +36,7 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 			newIdeaSets.push({
 				ideas: ideaSets[ideaSets.length - 1].ideas,
 				likedIdeaIndex,
-				feedback
+				feedback,
 			})
 		}
 
@@ -47,7 +47,8 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 			requirements: {
 				purpose,
 				domains,
-				technologies
+				technologies,
+				additionalInformation
 			}
 		})
 	}
@@ -59,7 +60,7 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 			<Header purpose={purpose} domains={domains} technologies={technologies} />
 			<div className="space-y-10 mt-10 flex flex-col items-center justify-center">
 				{
-					ideaSets.slice(0, -1).map((ideaSet) => (
+					ideaSets.filter(i => i.likedIdeaIndex).map((ideaSet) => (
 						<PreviousIdeaSet
 							key={ideaSet.ideas[0].title}
 							ideas={ideaSet.ideas}
@@ -69,7 +70,8 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 					))
 				}
 				<ActiveIdeaSet
-					ideas={ideaSets[ideaSets.length - 1]?.ideas}
+					key={Math.random()}
+					ideas={ideaSets.find(i => !i.likedIdeaIndex)?.ideas || undefined}
 					count={2}
 					isFetching={status === "executing"}
 					handleCreateIdeaSet={handleCreateIdeaSet}

@@ -12,11 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { range } from "@/lib/utils";
 
 interface IdeaSetProps {
-  ideas: Idea[];
+  ideas?: Idea[];
   isFetching?: boolean;
   defaultCheckedIdea?: string;
   count: number;
-  handleCreateIdeaSet: (likedIdeaIndex: number, feedback: string) => void;
+  handleCreateIdeaSet: (likedIdeaIndex?: number, feedback?: string) => void;
 
 }
 
@@ -26,10 +26,11 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCre
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const feedback = data.get("feedback") as string;
-    const likedIdeaIndexNumber = data.get("likedIdeaIndex") as string
 
-    handleCreateIdeaSet(Number(likedIdeaIndexNumber), feedback);
+    const feedback = data.get("feedback") as string ?? undefined;
+    const likedIdeaIndexNumber = Number(data.get("likedIdeaIndex") as string ?? undefined);
+
+    handleCreateIdeaSet(likedIdeaIndexNumber, feedback);
   }
 
   return (
@@ -42,7 +43,7 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCre
           value={likedIdeaIndex}
           name="likedIdeaIndex"
         >
-          {isFetching || !ideas || ideas.length === 0
+          {isFetching || !ideas
             ? range(count).map((i) => <LoadingIdeaCard key={i} />)
             : ideas.map((idea, i) => (
               <RadioGroup.Item value={String(i + 1)} className="group" key={idea.title}>
@@ -59,13 +60,13 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCre
             </p>
           </div>
         )}
-        <Button variant="outline" type="submit" className="flex translate-y-10 !mt-0 mx-auto border-primary">
+        <Button disabled={isFetching || !ideas} variant="outline" type="submit" className="flex translate-y-10 !mt-0 mx-auto border-primary">
           {likedIdeaIndex ? "Generate More" : "Don't like any"}
           {likedIdeaIndex ? <PlusIcon /> : <ReloadIcon />}
         </Button>
       </form >
 
-      {likedIdeaIndex && <div className="flex justify-end items-center mt-20 gap-6">
+      {ideas && likedIdeaIndex && <div className="flex justify-end items-center mt-20 gap-6">
         <p className="text-right">
           <span>Wanna start with implementing</span> <br />
           <span className="text-primary"> {ideas[Number(likedIdeaIndex) - 1].title}</span>
