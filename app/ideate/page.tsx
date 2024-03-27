@@ -22,7 +22,6 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 	const { execute, status } = useAction(createIdeaSet, {
 		onSuccess: (data) => {
 			const ideaSet = JSON.parse(JSON.stringify(data))
-			console.log({ ideaSets, ideaSet })
 			setIdeaSets((old) => [...old, ideaSet]);
 		},
 		onError: (error) => {
@@ -31,7 +30,7 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 	})
 
 	const handleCreateIdeaSet = (likedIdeaIndex?: number, feedback?: string) => {
-		const newIdeaSets = ideaSets.slice(0, ideaSets.length - 1)
+		const newIdeaSets = [...ideaSets.slice(0, ideaSets.length - 1)]
 
 		if (likedIdeaIndex) {
 			newIdeaSets.push({

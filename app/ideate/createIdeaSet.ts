@@ -10,7 +10,6 @@ import {
 import { ChatOpenAI } from "@langchain/openai";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
-import { PromptTemplate } from "@langchain/core/prompts";
 
 export const createIdeaSet = action(
 	ideateInputSchema,
