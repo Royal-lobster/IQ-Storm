@@ -6,7 +6,7 @@ import Header from "./Header";
 import PreviousIdeaSet from "./PreviousIdeaSet";
 import { useAction } from "next-safe-action/hooks";
 import { createIdeaSet } from "./createIdeaSet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export interface IdeatePageProps {
@@ -49,6 +49,8 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 			}
 		})
 	}
+
+	useEffect(handleCreateIdeaSet, [])
 
 
 	return (
