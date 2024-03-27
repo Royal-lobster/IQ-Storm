@@ -42,7 +42,7 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCre
           value={likedIdeaIndex}
           name="likedIdeaIndex"
         >
-          {isFetching
+          {isFetching || !ideas || ideas.length === 0
             ? range(count).map((i) => <LoadingIdeaCard key={i} />)
             : ideas.map((idea, i) => (
               <RadioGroup.Item value={String(i + 1)} className="group" key={idea.title}>

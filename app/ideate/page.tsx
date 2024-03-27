@@ -40,6 +40,8 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 			})
 		}
 
+		setIdeaSets(newIdeaSets)
+
 		execute({
 			ideaSets: newIdeaSets,
 			requirements: {
@@ -52,13 +54,12 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 
 	useEffect(handleCreateIdeaSet, [])
 
-
 	return (
 		<div className="container py-20">
 			<Header purpose={purpose} domains={domains} technologies={technologies} />
 			<div className="space-y-10 mt-10 flex flex-col items-center justify-center">
 				{
-					ideaSets.filter(i => i.likedIdeaIndex).map((ideaSet, i) => (
+					ideaSets.slice(0, -1).map((ideaSet) => (
 						<PreviousIdeaSet
 							key={ideaSet.ideas[0].title}
 							ideas={ideaSet.ideas}
@@ -68,9 +69,9 @@ function IdeatePage({ searchParams }: IdeatePageProps) {
 					))
 				}
 				<ActiveIdeaSet
-					ideas={ideaSets.length ? ideaSets[ideaSets.length - 1]?.ideas : []}
+					ideas={ideaSets[ideaSets.length - 1]?.ideas}
 					count={2}
-					isFetching={status === "executing" || ideaSets.length === 0}
+					isFetching={status === "executing"}
 					handleCreateIdeaSet={handleCreateIdeaSet}
 				/>
 			</div>
