@@ -28,13 +28,9 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 const ideaSetFeedbackPrompt = endent`
 	I liked the idea {likedIdeaIndex}. Generate {initialIdeasCount} more ideas based on it. also my feedback on it is:
 	{feedback}
-`
+`;
 
 export const ideaSetFeedbackPromptTemplate = new PromptTemplate({
 	template: ideaSetFeedbackPrompt,
-	inputVariables: [
-		"likedIdeaIndex",
-		"initialIdeasCount",
-		"feedback"
-	]
-})
+	inputVariables: ["likedIdeaIndex", "initialIdeasCount", "feedback"],
+});
