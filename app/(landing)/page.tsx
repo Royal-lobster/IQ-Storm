@@ -4,7 +4,7 @@ import RequirementsForm from "./RequirementsForm";
 export default function Home() {
 	return (
 		<main className="flex flex-col md:flex-row min-h-screen">
-			<div className="md:flex-1 grid place-items-center hero-pattern border-r border-pink-500 p-10">
+			<div className="md:flex-1 max-w-2xl grid place-items-center hero-pattern border-r border-pink-500 p-10">
 				<Image
 					src="/iq-storm.png"
 					alt="A picture of brain with lightning bolt below it"

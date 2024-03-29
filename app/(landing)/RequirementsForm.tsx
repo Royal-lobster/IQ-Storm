@@ -42,7 +42,7 @@ function RequirementsForm() {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="space-y-8 lg:w-96"
+				className="space-y-6 lg:w-96"
 			>
 				<FormField
 					control={form.control}
