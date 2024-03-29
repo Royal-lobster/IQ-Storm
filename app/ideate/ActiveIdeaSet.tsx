@@ -54,7 +54,7 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCre
         {likedIdeaIndex && (
           <div className="grid w-full gap-1.5">
             <Label htmlFor="feedback">Why did you like it ?</Label>
-            <Textarea placeholder="Type your message here." id="feedback" />
+            <Textarea placeholder="Type your message here." name="feedback" />
             <p className="text-sm text-muted-foreground">
               This will help both you and me to know what you really want.
             </p>
