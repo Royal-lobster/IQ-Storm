@@ -35,9 +35,9 @@ function ActiveIdeaSet({ ideas, isFetching, count, defaultCheckedIdea, handleCre
 
   return (
     <div>
-      <form className="space-y-6 border p-6 w-max rounded-md bg-primary/10 border-primary" onSubmit={handleFormSubmit}>
-        <Label htmlFor="likedIdeaIndex" className="text-xl font-semibold text-primary">Which one do you like?</Label>
-        <RadioGroup.Root className="flex justify-center items-stretch flex-wrap gap-4"
+      <form className="space-y-4 sm:space-y-6 border p-4 sm:p-6 w-max rounded-md bg-primary/10 border-primary" onSubmit={handleFormSubmit}>
+        <Label htmlFor="likedIdeaIndex" className="text-lg sm:text-xl text-center block w-full sm:text-left font-semibold text-primary">Which one do you like?</Label>
+        <RadioGroup.Root className="flex flex-col sm:flex-row justify-center items-stretch flex-wrap gap-4"
           disabled={isFetching}
           onValueChange={setLikedIdeaIndex}
           value={likedIdeaIndex}
