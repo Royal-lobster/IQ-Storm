@@ -26,7 +26,7 @@ export const generateInitialIdeasPromptTemplate = new PromptTemplate({
 });
 
 const ideaSetFeedbackPrompt = endent`
-	I liked the idea {likedIdeaIndex}. Generate {initialIdeasCount} more ideas based on it. also my feedback on it is:
+	I like this idea - {likedIdeaIndex}.\nGenerate {initialIdeasCount} more ideas based on this idea which I like.\nalso my feedback on it is:
 	{feedback}
 `;
 
@@ -34,3 +34,14 @@ export const ideaSetFeedbackPromptTemplate = new PromptTemplate({
 	template: ideaSetFeedbackPrompt,
 	inputVariables: ["likedIdeaIndex", "initialIdeasCount", "feedback"],
 });
+
+const ideaImplementation = endent`
+	Give me steps to briefly describing how to implement below idea for the purpose of {purpose} -\n{selectedIdeaIndex}\n
+	Here are the techologies that i need to use during implementation - {technologies}.\n
+	I want the steps to be in order and dont involve any kind of code snippets, i just want explanation in plain english.
+`
+
+export const ideaImplementPromptTemplate = new PromptTemplate({
+	template: ideaImplementation,
+	inputVariables: ["purpose", "selectedIdeaIndex", "technologies"],
+})

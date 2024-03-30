@@ -30,8 +30,14 @@ export const ideateOutputSchema = z.object({
 	ideas: z.array(ideaSchema),
 });
 
+export const ideaImplementSchema  = z.object({
+	idea: ideaSchema,
+	requirements: requirementsSchema
+})
+
 export type Idea = z.infer<typeof ideaSchema>;
 export type IdeaSets = z.input<typeof IdeaSetsSchema>;
 export type Requirements = z.infer<typeof requirementsSchema>;
 export type IdeateInput = z.infer<typeof ideateInputSchema>;
 export type IdeateOutput = z.infer<typeof ideateOutputSchema>;
+export type IdeaImplement = z.infer<typeof ideaImplementSchema>;
